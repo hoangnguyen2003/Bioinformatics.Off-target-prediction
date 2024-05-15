@@ -1,4 +1,4 @@
-import dataset_utils, model_utils
+import dataset_utils
 
 import keras
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
@@ -13,6 +13,7 @@ class OffTargetPrediction:
                  batch_size,
                  lr
                  ):
+        self.dataset_dir = dataset_dir
         self.lr = lr
         self.batch_size = batch_size
 
@@ -44,8 +45,10 @@ class OffTargetPrediction:
         print(self.model.summary())
 
     def get_data(self):
-        X_train = 
-        y_train =
+        ds = dataset_utils.Dataset(self.dataset_dir)
+        print(ds.get_final_ds())
+        # X_train = 
+        # y_train =
 
     def train(self, epochs):
         self.model.fit(self.X_train, self.y_train,
@@ -53,19 +56,5 @@ class OffTargetPrediction:
                        shuffle=True
                        )
     
-    def predict(guide_seq, off_seq):
-        code_dict = {'A': [1, 0, 0, 0], 'T': [0, 1, 0, 0], 'G': [0, 0, 1, 0], 'C': [0, 0, 0, 1]}
-        gRNA_list = list(guide_seq)
-        off_list = list(off_seq)
-        pair_code = []
-
-        for i in range(len(gRNA_list)):
-            if gRNA_list[i] == 'N':
-                gRNA_list[i] = off_list[i]
-            gRNA_base_code = code_dict[gRNA_list[i]]
-            DNA_based_code = code_dict[off_list[i]]
-            pair_code.append(list(np.bitwise_or(gRNA_base_code, DNA_based_code)))
-        input_code = np.array(pair_code).reshape(1, 1, 23, 4)
-        y_pred = loaded_model.predict(input_code).flatten()
-        print(y_pred)
-        return y_pred
+    def validate(self):
+        

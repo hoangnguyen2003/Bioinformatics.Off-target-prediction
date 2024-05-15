@@ -8,6 +8,7 @@ def main(args):
                                                 lr=args.lr
                                                 )
     off_target_prediction.train(epochs=args.num_epochs)
+    off_target_prediction.get_data()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
