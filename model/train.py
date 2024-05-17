@@ -1,5 +1,6 @@
 import argparse
 import os
+import tensorflow as tf
 
 from cnn_utils import OffTargetPrediction
 
@@ -8,7 +9,14 @@ def main(args):
                                                 batch_size=args.batch_size,
                                                 lr=args.lr
                                                 )
-    off_target_prediction.train(epochs=args.num_epochs)
+    
+    os.environ["KERAS_BACKEND"] = "tensorflow"
+
+    strategy = tf.distribute.MirroredStrategy()
+    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+
+    with strategy.scope():
+        off_target_prediction.train(epochs=args.num_epochs)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
