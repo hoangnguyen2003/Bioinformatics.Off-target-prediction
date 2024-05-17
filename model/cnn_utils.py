@@ -39,7 +39,7 @@ class OffTargetPrediction:
 
         self.model = Model(inputs, prediction)
 
-        adam_opt = keras.optimizers.adam(lr=self.lr)
+        adam_opt = tf.keras.optimizers.adam(lr=self.lr)
 
         self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
         print(self.model.summary())
