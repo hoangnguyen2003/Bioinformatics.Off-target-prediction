@@ -12,7 +12,7 @@ def main(args):
     
     os.environ["KERAS_BACKEND"] = "tensorflow"
 
-    strategy = tf.distribute.MirroredStrategy()
+    strategy = tf.contrib.distribute.MirroredStrategy()
     print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
     with strategy.scope():
