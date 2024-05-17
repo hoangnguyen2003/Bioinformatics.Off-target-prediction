@@ -1,5 +1,6 @@
 import dataset_utils
 
+import tensorflow as tf
 import keras
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
 from keras.models import Model
