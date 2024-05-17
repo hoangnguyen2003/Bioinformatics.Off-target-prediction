@@ -18,32 +18,36 @@ class OffTargetPrediction:
         self.lr = lr
         self.batch_size = batch_size
 
-        inputs = Input(shape=(1, 23, 4), name='main_input')
-        conv_1 = Conv2D(10, (4, 1), padding='same', activation='relu')(inputs)
-        conv_2 = Conv2D(10, (4, 2), padding='same', activation='relu')(inputs)
-        conv_3 = Conv2D(10, (4, 3), padding='same', activation='relu')(inputs)
-        conv_4 = Conv2D(10, (4, 5), padding='same', activation='relu')(inputs)
+        strategy = tf.distribute.MirroredStrategy()
+        print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-        conv_output = keras.layers.concatenate([conv_1, conv_2, conv_3, conv_4])
+        with strategy.scope():
+            inputs = Input(shape=(1, 23, 4), name='main_input')
+            conv_1 = Conv2D(10, (4, 1), padding='same', activation='relu')(inputs)
+            conv_2 = Conv2D(10, (4, 2), padding='same', activation='relu')(inputs)
+            conv_3 = Conv2D(10, (4, 3), padding='same', activation='relu')(inputs)
+            conv_4 = Conv2D(10, (4, 5), padding='same', activation='relu')(inputs)
 
-        bn_output = BatchNormalization()(conv_output)
+            conv_output = keras.layers.concatenate([conv_1, conv_2, conv_3, conv_4])
 
-        pooling_output = keras.layers.MaxPool2D(pool_size=(1, 5), strides=None, padding='valid')(bn_output)
+            bn_output = BatchNormalization()(conv_output)
 
-        flatten_output = Flatten()(pooling_output)
+            pooling_output = keras.layers.MaxPool2D(pool_size=(1, 5), strides=None, padding='valid')(bn_output)
 
-        x = Dense(100, activation='softmax')(flatten_output)
-        x = Dense(23, activation='softmax')(x)
-        x = keras.layers.Dropout(rate=0.15)(x)
+            flatten_output = Flatten()(pooling_output)
 
-        prediction = Dense(2, activation='softmax', name='main_output')(x)
+            x = Dense(100, activation='softmax')(flatten_output)
+            x = Dense(23, activation='softmax')(x)
+            x = keras.layers.Dropout(rate=0.15)(x)
 
-        self.model = Model(inputs, prediction)
+            prediction = Dense(2, activation='softmax', name='main_output')(x)
 
-        adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
+            self.model = Model(inputs, prediction)
 
-        self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
-        print(self.model.summary())
+            adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
+
+            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
+        self.model.summary()
 
     def get_data(self):
         ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds()

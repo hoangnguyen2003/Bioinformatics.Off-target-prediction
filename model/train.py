@@ -10,13 +10,7 @@ def main(args):
                                                 lr=args.lr
                                                 )
     
-    os.environ["KERAS_BACKEND"] = "tensorflow"
-
-    strategy = tf.distribute.MirroredStrategy()
-    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
-
-    with strategy.scope():
-        off_target_prediction.train(epochs=args.num_epochs)
+    off_target_prediction.train(epochs=args.num_epochs)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
