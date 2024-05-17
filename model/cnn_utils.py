@@ -31,8 +31,8 @@ class OffTargetPrediction:
 
         flatten_output = Flatten()(pooling_output)
 
-        x = Dense(100, activation='relu')(flatten_output)
-        x = Dense(23, activation='relu')(x)
+        x = Dense(100, activation='softmax')(flatten_output)
+        x = Dense(23, activation='softmax')(x)
         x = keras.layers.Dropout(rate=0.15)(x)
 
         prediction = Dense(2, activation='softmax', name='main_output')(x)

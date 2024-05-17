@@ -3,7 +3,7 @@ from numpy import loadtxt
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.utils import to_categoricals
+from tensorflow.keras.utils import to_categorical
 
 class Dataset:
     def __init__(self, dataset_dir):
