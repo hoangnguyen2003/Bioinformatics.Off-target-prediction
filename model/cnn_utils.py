@@ -35,7 +35,7 @@ class OffTargetPrediction:
         x = Dense(23, activation='relu')(x)
         x = keras.layers.Dropout(rate=0.15)(x)
 
-        prediction = Dense(2, name='main_output')(x)
+        prediction = Dense(2, activation='softmax', name='main_output')(x)
 
         self.model = Model(inputs, prediction)
 
@@ -45,16 +45,15 @@ class OffTargetPrediction:
         print(self.model.summary())
 
     def get_data(self):
-        ds = dataset_utils.Dataset(self.dataset_dir)
-        print(ds.get_final_ds())
-        # X_train = 
-        # y_train =
+        ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds()
+        self.X_train, self.y_train, self.X_test, self.y_test = ds
 
     def train(self, epochs):
+        self.get_data()
         self.model.fit(self.X_train, self.y_train,
                        batch_size=self.batch_size, epochs=epochs,
                        shuffle=True
                        )
     
     def validate(self):
-        
+        pass

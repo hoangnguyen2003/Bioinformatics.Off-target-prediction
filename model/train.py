@@ -1,14 +1,14 @@
 import argparse
+import os
 
 from cnn_utils import OffTargetPrediction
 
 def main(args):
-    off_target_prediction = OffTargetPrediction(dataset_dir=args.dataset_dir,
+    off_target_prediction = OffTargetPrediction(dataset_dir=os.path.join(args.dataset_dir, args.dataset_name),
                                                 batch_size=args.batch_size,
                                                 lr=args.lr
                                                 )
     off_target_prediction.train(epochs=args.num_epochs)
-    off_target_prediction.get_data()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -17,8 +17,15 @@ if __name__ == "__main__":
 
     parser.add_argument(
         '--dataset_dir',
-        nargs='+',
+        type=str,
         help='base directory of dataset',
+        default="datasets/"
+    )
+
+    parser.add_argument(
+        '--dataset_name',
+        type=str,
+        help='dataset name',
         required=True
     )
 

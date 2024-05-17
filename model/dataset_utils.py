@@ -3,6 +3,7 @@ from numpy import loadtxt
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.utils import to_categoricals
 
 class Dataset:
     def __init__(self, dataset_dir):
@@ -51,13 +52,18 @@ class Dataset:
             gRNA_base_code = self.code_dict[gRNA_list[i]]
             DNA_based_code = self.code_dict[off_list[i]]
             pair_code.append(list(np.bitwise_or(gRNA_base_code, DNA_based_code)))
-        return np.array(pair_code).reshape(1, 1, 23, 4)
+        return np.array(pair_code).reshape(1, 23, 4)
 
     def get_final_ds(self):
         dataset = self.load_data(os.path.splitext(
             os.path.basename(self.dataset_dir))[0])
-        datset_encodings = np.array(train.apply(
-            lambda row: Dataset("datasets\SITE-Seq_offTarget_wholeDataset.csv").preprocess_function(
+        train, test = train_test_split(dataset, test_size=0.2, random_state=42)
+
+        X_train_encodings = np.array(train.apply(
+            lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        train, test = train_test_split(datset_encodings, test_size=0.2, random_state=42)
-        return train, test
+        X_test_encodings = np.array(test.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        
+        return X_train_encodings, to_categorical(train['labels'], num_classes=2), X_test_encodings, to_categorical(test['labels'], num_classes=2)
