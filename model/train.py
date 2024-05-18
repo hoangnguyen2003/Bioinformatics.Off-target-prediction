@@ -12,11 +12,7 @@ def main(args):
                                                 retrain=args.retrain,
                                                 )
     
-    # off_target_prediction.do_all()
-    off_target_prediction.get_data()
-    for a in off_target_prediction.X_test:
-        if a.shape != (1, 23, 4):
-            print(a.shape)
+    off_target_prediction.do_all()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
