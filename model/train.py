@@ -12,7 +12,9 @@ def main(args):
                                                 retrain=args.retrain,
                                                 )
     
-    off_target_prediction.do_all()
+    # off_target_prediction.do_all()
+    off_target_prediction.get_data()
+    print(off_target_prediction.X_test)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

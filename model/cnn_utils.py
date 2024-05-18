@@ -74,11 +74,11 @@ class OffTargetPrediction:
         ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=2)
         self.X_train, self.y_train, self.X_val, self.y_val, self.X_test, self.y_test = ds
 
-    def train(self, X, y):
-        self.model.fit(X, y,
+    def train(self, X_train, y_train, X_val, y_val):
+        self.model.fit(X_train, y_train,
                        batch_size=self.batch_size, epochs=self.epochs,
                        shuffle=True,
-                       validation_data=(self.X_val, self.y_val),
+                       validation_data=(X_val, y_val),
                        callbacks=self.callbacks,
                        )
         self.model.save('SaveModel/' + self.model_name + '.h5')
@@ -101,5 +101,5 @@ class OffTargetPrediction:
     
     def do_all(self):
         self.get_data()
-        self.train(self.X_train, self.y_train)
+        self.train(self.X_train, self.y_train, self.X_val, self.y_val)
         self.validate(self.X_test, self.y_test)
