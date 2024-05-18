@@ -4,6 +4,8 @@ import pandas as pd
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
+seed = 42
+
 class Dataset:
     def __init__(self, dataset_dir):
         self.dataset_dir = dataset_dir
