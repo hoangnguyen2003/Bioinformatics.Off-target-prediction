@@ -84,21 +84,20 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        print(X.shape)
-        # y_score = self.model.predict(X)
-        # y_pred = np.argmax(y_score, axis=1)
-        # y_score = y_score[:, 1]
+        y_score = self.model.predict(X)
+        y_pred = np.argmax(y_score, axis=1)
+        y_score = y_score[:, 1]
 
-        # eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
-        # eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
-        # eval_fun_types = [True, True, True, True, False, False]
+        eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
+        eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
+        eval_fun_types = [True, True, True, True, False, False]
 
-        # for index_f, function in enumerate(eval_funs):
-        #     if eval_fun_types[index_f]:
-        #         score = np.round(function(y, y_pred), 4)
-        #     else:
-        #         score = np.round(function(y, y_score), 4)
-        #     print('{:<15}{:>15}'.format(eval_fun_names[index_f], score))
+        for index_f, function in enumerate(eval_funs):
+            if eval_fun_types[index_f]:
+                score = np.round(function(y, y_pred), 4)
+            else:
+                score = np.round(function(y, y_score), 4)
+            print('{:<15}{:>15}'.format(eval_fun_names[index_f], score))
     
     def do_all(self):
         self.get_data()
