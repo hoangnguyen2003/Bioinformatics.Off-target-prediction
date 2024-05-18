@@ -1,9 +1,8 @@
 import numpy as np
-from numpy import loadtxt
 import os
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
 
 class Dataset:
     def __init__(self, dataset_dir):
@@ -28,7 +27,6 @@ class Dataset:
         sgRNAs = data[columns[0]]
         DNAs = data[columns[1]]
         labels = data[columns[2]]
-        sgRNA_types = data[columns[3]]
 
         sgRNAs = sgRNAs.apply(lambda sgRNA: sgRNA.upper())
         DNAs = DNAs.apply(lambda DNA: DNA.upper())
@@ -54,16 +52,23 @@ class Dataset:
             pair_code.append(list(np.bitwise_or(gRNA_base_code, DNA_based_code)))
         return np.array(pair_code).reshape(1, 23, 4)
 
-    def get_final_ds(self):
+    def get_final_ds(self, num_classes):
         dataset = self.load_data(os.path.splitext(
             os.path.basename(self.dataset_dir))[0])
-        train, test = train_test_split(dataset, test_size=0.2, random_state=42)
+        train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
+        val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
 
         X_train_encodings = np.array(train.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        X_val_encodings = np.array(val.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
         X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
         
-        return X_train_encodings, to_categorical(train['labels'], num_classes=2), X_test_encodings, to_categorical(test['labels'], num_classes=2)
+        return X_train_encodings, to_categorical(
+            train['labels'], num_classes=num_classes), X_val_encodings, to_categorical(
+                val['labels'], num_classes=num_classes), X_test_encodings, to_categorical(
+                    test['labels'], num_classes=2), 

@@ -1,16 +1,18 @@
 import argparse
 import os
-import tensorflow as tf
 
 from cnn_utils import OffTargetPrediction
 
 def main(args):
     off_target_prediction = OffTargetPrediction(dataset_dir=os.path.join(args.dataset_dir, args.dataset_name),
+                                                model_name=args.model_name,
+                                                epochs=args.num_epochs,
                                                 batch_size=args.batch_size,
-                                                lr=args.lr
+                                                lr=args.lr,
+                                                retrain=args.retrain,
                                                 )
     
-    off_target_prediction.train(epochs=args.num_epochs)
+    off_target_prediction.do_all()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -20,14 +22,21 @@ if __name__ == "__main__":
     parser.add_argument(
         '--dataset_dir',
         type=str,
-        help='base directory of dataset',
+        help='Base directory of dataset',
         default="datasets/"
     )
 
     parser.add_argument(
         '--dataset_name',
         type=str,
-        help='dataset name',
+        help='Dataset name',
+        required=True
+    )
+
+    parser.add_argument(
+        '--model_name',
+        type=str,
+        help='Trained model name to save',
         required=True
     )
 
@@ -50,6 +59,13 @@ if __name__ == "__main__":
         type=float,
         help='Learning rate',
         default=1e-4
+    )
+
+    parser.add_argument(
+        '--retrain',
+        type=int,
+        help='Whether to retrain (0 - False, 1 - True)',
+        default=0
     )
 
     main(parser.parse_args())
