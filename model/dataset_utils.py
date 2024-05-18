@@ -73,4 +73,4 @@ class Dataset:
         return X_train_encodings, to_categorical(
             train['labels'], num_classes=num_classes), X_val_encodings, to_categorical(
                 val['labels'], num_classes=num_classes), X_test_encodings, to_categorical(
-                    test['labels'], num_classes=2), 
+                    test['labels'], num_classes=num_classes)
