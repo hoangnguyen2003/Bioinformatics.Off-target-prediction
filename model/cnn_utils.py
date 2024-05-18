@@ -74,8 +74,8 @@ class OffTargetPrediction:
         ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=2)
         self.X_train, self.y_train, self.X_val, self.y_val, self.X_test, self.y_test = ds
 
-    def train(self):
-        self.model.fit(self.X_train, self.y_train,
+    def train(self, X, y):
+        self.model.fit(X, y,
                        batch_size=self.batch_size, epochs=self.epochs,
                        shuffle=True,
                        validation_data=(self.X_val, self.y_val),
