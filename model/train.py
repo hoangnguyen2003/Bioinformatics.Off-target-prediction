@@ -14,7 +14,8 @@ def main(args):
     
     # off_target_prediction.do_all()
     off_target_prediction.get_data()
-    print(off_target_prediction.X_test)
+    for a in off_target_prediction.X_test:
+        print(a.shape)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
