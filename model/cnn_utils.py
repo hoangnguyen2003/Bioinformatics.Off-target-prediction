@@ -84,7 +84,7 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        print(self.model.evaluate(X, y, batch_size=self.batch_size, return_dict=True))
+        print(self.model.predict(X[0]))
         y_score = self.model.predict(X)
         y_pred = np.argmax(y_score, axis=1)
         y_score = y_score[:, 1]
