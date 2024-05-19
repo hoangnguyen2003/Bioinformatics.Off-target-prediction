@@ -69,8 +69,7 @@ class Dataset:
         X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        print(X_test_encodings)
-        print(X_test_encodings.shape)
+
         return X_train_encodings, to_categorical(
             train['labels'], num_classes=num_classes), X_val_encodings, to_categorical(
                 val['labels'], num_classes=num_classes), X_test_encodings, to_categorical(
