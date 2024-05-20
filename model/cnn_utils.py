@@ -88,7 +88,7 @@ class OffTargetPrediction:
         print(a)
         print(self.y_train[:2])
         print(self.model.predict(a))
-        y_score = self.model.predict(X, batch_size=1)
+        y_score = self.model.predict(X)
         y_pred = np.argmax(y_score, axis=1)
         y_score = y_score[:, 1]
 
