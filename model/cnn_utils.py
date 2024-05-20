@@ -84,27 +84,9 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        code_dict = {'A': [1, 0, 0, 0], 'T': [0, 1, 0, 0], 'G': [0, 0, 1, 0], 'C': [0, 0, 0, 1]}
-        gRNA_list = list("GGGGCCACTAGGGACAGGATNGG")
-        off_list = list("TGGGAAACTAGGGACAGTACTTG")
-        print(len(gRNA_list))
-        if len(gRNA_list) != len(off_list):
-            print("the length of sgRNA and DNA are not matched!")
-            return 0
-        pair_code = []
-
-        for i in range(len(gRNA_list)):
-            if gRNA_list[i] == 'N':
-                gRNA_list[i] = off_list[i]
-            gRNA_base_code = code_dict[gRNA_list[i]]
-            DNA_based_code = code_dict[off_list[i]]
-            pair_code.append(list(np.bitwise_or(gRNA_base_code, DNA_based_code)))
-        input_code = np.array(pair_code).reshape(1, 1, 23, 4)
-
         a = np.array(X[0]).reshape(1, 1, 23, 4)
-        print(input_code)
         print(a)
-        print(self.model.predict(input_code))
+        print(self.model.predict(a).flatten())
         y_score = self.model.predict(X)
         y_pred = np.argmax(y_score, axis=1)
         y_score = y_score[:, 1]
