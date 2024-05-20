@@ -43,10 +43,10 @@ class OffTargetPrediction:
 
         with strategy.scope():
             inputs = Input(shape=(1, 23, 4), name='main_input')
-            conv_1 = Conv2D(10, (4, 1), padding='same', activation='relu')(inputs)
-            conv_2 = Conv2D(10, (4, 2), padding='same', activation='relu')(inputs)
-            conv_3 = Conv2D(10, (4, 3), padding='same', activation='relu')(inputs)
-            conv_4 = Conv2D(10, (4, 5), padding='same', activation='relu')(inputs)
+            conv_1 = Conv2D(10, (1, 1), padding='same', activation='relu')(inputs)
+            conv_2 = Conv2D(10, (1, 2), padding='same', activation='relu')(inputs)
+            conv_3 = Conv2D(10, (1, 3), padding='same', activation='relu')(inputs)
+            conv_4 = Conv2D(10, (1, 5), padding='same', activation='relu')(inputs)
 
             conv_output = keras.layers.concatenate([conv_1, conv_2, conv_3, conv_4])
 
@@ -57,11 +57,11 @@ class OffTargetPrediction:
 
             flatten_output = Flatten()(pooling_output)
 
-            x = Dense(100, activation='softmax')(flatten_output)
-            x = Dense(23, activation='softmax')(x)
+            x = Dense(100, activation='relu')(flatten_output)
+            x = Dense(23, activation='relu')(x)
             x = keras.layers.Dropout(rate=0.15)(x)
 
-            prediction = Dense(2, activation='softmax', name='main_output')(x)
+            prediction = Dense(2, name='main_output')(x)
 
             self.model = Model(inputs, prediction)
 
