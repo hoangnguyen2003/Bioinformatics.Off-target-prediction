@@ -42,7 +42,7 @@ class OffTargetPrediction:
         print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
         with strategy.scope():
-            inputs = Input(shape=(23, 4), name='main_input')
+            inputs = Input(shape=(1, 23, 4), name='main_input')
             conv_1 = Conv2D(10, (1, 1), padding='same', activation='relu')(inputs)
             conv_2 = Conv2D(10, (1, 2), padding='same', activation='relu')(inputs)
             conv_3 = Conv2D(10, (1, 3), padding='same', activation='relu')(inputs)
@@ -84,7 +84,7 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        a = np.array(self.X_train[:3]).reshape(3, 23, 4)
+        a = np.array(self.X_train[:3]).reshape(3, 1, 23, 4)
         print(a)
         print(self.y_train[:2])
         print(self.model.predict(a))

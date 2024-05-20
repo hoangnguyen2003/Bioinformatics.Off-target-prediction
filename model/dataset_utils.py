@@ -52,7 +52,7 @@ class Dataset:
             gRNA_base_code = self.code_dict[gRNA_list[i]]
             DNA_based_code = self.code_dict[off_list[i]]
             pair_code.append(list(np.bitwise_or(gRNA_base_code, DNA_based_code)))
-        return np.array(pair_code).reshape(23, 4)
+        return np.array(pair_code).reshape(1, 23, 4)
 
     def get_final_ds(self, num_classes):
         dataset = self.load_data(os.path.splitext(
