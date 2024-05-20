@@ -86,6 +86,7 @@ class OffTargetPrediction:
     def validate(self, X, y):
         a = np.array(self.X_train[:3]).reshape(3, 1, 23, 4)
         print(a)
+        print(self.y_train[:2])
         print(self.model.predict(a))
         y_score = self.model.predict(X, batch_size=1)
         y_pred = np.argmax(y_score, axis=1)
