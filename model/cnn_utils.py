@@ -87,7 +87,7 @@ class OffTargetPrediction:
         a = np.array(self.X_train[:4]).reshape(4, 1, 23, 4)
         print(a)
         print(self.y_train[:4])
-        print(self.model.predict(a, batch_size=1))
+        print(self.model.predict(a, batch_size=4))
         y_score = self.model.predict(X)
         y_pred = np.argmax(y_score, axis=1)
         y_score = y_score[:, 1]
