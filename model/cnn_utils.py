@@ -78,8 +78,8 @@ class OffTargetPrediction:
         self.model.fit(X_train, y_train,
                        batch_size=self.batch_size, epochs=self.epochs,
                        shuffle=True,
-                       validation_data=(X_val, y_val),
-                       callbacks=self.callbacks,
+                    #    validation_data=(X_val, y_val),
+                    #    callbacks=self.callbacks,
                        )
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
