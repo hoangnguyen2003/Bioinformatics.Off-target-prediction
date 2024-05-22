@@ -38,10 +38,6 @@ class OffTargetPrediction:
                                                          )
         self.callbacks = [eary_stopping]
 
-        # strategy = tf.distribute.MirroredStrategy()
-        # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
-
-        # with strategy.scope():
         inputs = Input(shape=(1, 23, 4), name='main_input')
         conv_1 = Conv2D(10, (1, 1), padding='same', activation='relu')(inputs)
         conv_2 = Conv2D(10, (1, 2), padding='same', activation='relu')(inputs)
