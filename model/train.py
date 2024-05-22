@@ -4,15 +4,19 @@ import os
 from cnn_utils import OffTargetPrediction
 
 def main(args):
-    off_target_prediction = OffTargetPrediction(dataset_dir=os.path.join(args.dataset_dir, args.dataset_name),
-                                                model_name=args.model_name,
-                                                epochs=args.num_epochs,
-                                                batch_size=args.batch_size,
-                                                lr=args.lr,
-                                                retrain=args.retrain,
-                                                )
-    
-    off_target_prediction.do_all()
+    strategy = tf.distribute.MirroredStrategy()
+    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+
+    with strategy.scope():
+        off_target_prediction = OffTargetPrediction(dataset_dir=os.path.join(args.dataset_dir, args.dataset_name),
+                                                    model_name=args.model_name,
+                                                    epochs=args.num_epochs,
+                                                    batch_size=args.batch_size,
+                                                    lr=args.lr,
+                                                    retrain=args.retrain,
+                                                    )
+        
+        off_target_prediction.do_all()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
