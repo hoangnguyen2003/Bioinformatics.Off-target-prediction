@@ -25,6 +25,7 @@ class OffTargetPrediction:
         self.epochs = epochs
         self.lr = lr
         self.batch_size = batch_size
+        self.num_classes = 2
 
         if not retrain:
             self.model = load_model('SaveModel/' + self.model_name + '.h5')
@@ -57,7 +58,7 @@ class OffTargetPrediction:
         x = Dense(23, activation='softmax')(x)
         x = keras.layers.Dropout(rate=0.15)(x)
 
-        prediction = Dense(2, activation='softmax', name='main_output')(x)
+        prediction = Dense(self.num_classes, activation='softmax', name='main_output')(x)
 
         self.model = Model(inputs, prediction)
 
@@ -67,7 +68,7 @@ class OffTargetPrediction:
         self.model.summary()
 
     def get_data(self):
-        ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=2)
+        ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=self.num_classes)
         self.X_train, self.y_train, self.X_val, self.y_val, self.X_test, self.y_test = ds
 
     def train(self, X_train, y_train, X_val, y_val):
@@ -80,10 +81,6 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        a = np.array(self.X_train[:4]).reshape(4, 1, 23, 4)
-        print(a)
-        print(self.y_train[:4])
-        print(self.model.predict(a, batch_size=4))
         y_score = self.model.predict(X)
         y_pred = np.argmax(y_score, axis=1)
         y_score = y_score[:, 1]
@@ -91,7 +88,8 @@ class OffTargetPrediction:
         eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
         eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
         eval_fun_types = [True, True, True, True, False, False]
-
+        print(y)
+        print(y_pred)
         for index_f, function in enumerate(eval_funs):
             if eval_fun_types[index_f]:
                 score = np.round(function(y, y_pred), 4)
