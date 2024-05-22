@@ -88,8 +88,6 @@ class OffTargetPrediction:
         eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
         eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
         eval_fun_types = [True, True, True, True, False, False]
-        print(y)
-        print(y_pred)
         for index_f, function in enumerate(eval_funs):
             if eval_fun_types[index_f]:
                 score = np.round(function(y, y_pred), 4)
