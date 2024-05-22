@@ -38,36 +38,36 @@ class OffTargetPrediction:
                                                          )
         self.callbacks = [eary_stopping]
 
-        strategy = tf.distribute.MirroredStrategy()
-        print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+        # strategy = tf.distribute.MirroredStrategy()
+        # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-        with strategy.scope():
-            inputs = Input(shape=(1, 23, 4), name='main_input')
-            conv_1 = Conv2D(10, (1, 1), padding='same', activation='relu')(inputs)
-            conv_2 = Conv2D(10, (1, 2), padding='same', activation='relu')(inputs)
-            conv_3 = Conv2D(10, (1, 3), padding='same', activation='relu')(inputs)
-            conv_4 = Conv2D(10, (1, 5), padding='same', activation='relu')(inputs)
+        # with strategy.scope():
+        inputs = Input(shape=(1, 23, 4), name='main_input')
+        conv_1 = Conv2D(10, (1, 1), padding='same', activation='relu')(inputs)
+        conv_2 = Conv2D(10, (1, 2), padding='same', activation='relu')(inputs)
+        conv_3 = Conv2D(10, (1, 3), padding='same', activation='relu')(inputs)
+        conv_4 = Conv2D(10, (1, 5), padding='same', activation='relu')(inputs)
 
-            conv_output = keras.layers.concatenate([conv_1, conv_2, conv_3, conv_4])
+        conv_output = keras.layers.concatenate([conv_1, conv_2, conv_3, conv_4])
 
-            bn_output = BatchNormalization()(conv_output)
+        bn_output = BatchNormalization()(conv_output)
 
-            pooling_output = keras.layers.MaxPool2D(pool_size=(1, 5),
-                                                    strides=None, padding='valid')(bn_output)
+        pooling_output = keras.layers.MaxPool2D(pool_size=(1, 5),
+                                                strides=None, padding='valid')(bn_output)
 
-            flatten_output = Flatten()(pooling_output)
+        flatten_output = Flatten()(pooling_output)
 
-            x = Dense(100, activation='relu')(flatten_output)
-            x = Dense(23, activation='relu')(x)
-            x = keras.layers.Dropout(rate=0.15)(x)
+        x = Dense(100, activation='relu')(flatten_output)
+        x = Dense(23, activation='relu')(x)
+        x = keras.layers.Dropout(rate=0.15)(x)
 
-            prediction = Dense(2, name='main_output')(x)
+        prediction = Dense(2, name='main_output')(x)
 
-            self.model = Model(inputs, prediction)
+        self.model = Model(inputs, prediction)
 
-            adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
+        adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
 
-            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
+        self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
         self.model.summary()
 
     def get_data(self):
