@@ -1,5 +1,6 @@
 import dataset_utils
 
+import os
 import numpy as np
 import tensorflow as tf
 import keras
@@ -26,6 +27,9 @@ class OffTargetPrediction:
         self.lr = lr
         self.batch_size = batch_size
         self.num_classes = 2
+
+        os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+        os.environ['PYTHONHASHSEED'] = str(seed)
 
         if not retrain:
             self.model = load_model('SaveModel/' + self.model_name + '.h5')
