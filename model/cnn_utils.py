@@ -149,7 +149,7 @@ class OffTargetPrediction:
             ylabel="True Positive Rate",
             title="Receiver operating characteristic curve",
         )
-        plt.show()
+        plt.savefig('roc.png')
     
     def do_all(self):
         self.get_data()
