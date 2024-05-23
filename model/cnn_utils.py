@@ -4,9 +4,11 @@ import os
 import numpy as np
 import tensorflow as tf
 import keras
+import matplotlib.pyplot as plt
 from keras.models import Model, load_model
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
-from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score
+from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
+from sklearn.preprocessing import LabelBinarizer
 
 seed = 42
 np.random.seed(seed)
@@ -85,9 +87,9 @@ class OffTargetPrediction:
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
     def validate(self, X, y):
-        y_score = self.model.predict(X)
-        y_pred = np.argmax(y_score, axis=1)
-        y_score = y_score[:, 1]
+        y_score_ = self.model.predict(X)
+        y_pred = np.argmax(y_score_, axis=1)
+        y_score = y_score_[:, 1]
 
         eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
         eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
@@ -98,6 +100,55 @@ class OffTargetPrediction:
             else:
                 score = np.round(function(y, y_score), 4)
             print('{:<15}{:>15}'.format(eval_fun_names[index_f], score))
+
+        label_binarizer = LabelBinarizer().fit(self.y_train)
+        fpr_grid = np.linspace(0.0, 1.0, 1000)
+
+        a_mask = y == 0
+        b_mask = y == 1
+        ab_mask = np.logical_or(a_mask, b_mask)
+
+        a_true = a_mask[ab_mask]
+        b_true = b_mask[ab_mask]
+
+        idx_a = np.flatnonzero(label_binarizer.classes_ == 0)[0]
+        idx_b = np.flatnonzero(label_binarizer.classes_ == 1)[0]
+
+        fpr_a, tpr_a, _ = roc_curve(a_true, y_score_[ab_mask, idx_a])
+        fpr_b, tpr_b, _ = roc_curve(b_true, y_score_[ab_mask, idx_b])
+
+        mean_tpr = np.zeros_like(fpr_grid)
+        mean_tpr += np.interp(fpr_grid, fpr_a, tpr_a)
+        mean_tpr += np.interp(fpr_grid, fpr_b, tpr_b)
+        mean_tpr /= 2
+        mean_score = auc(fpr_grid, mean_tpr)
+
+        ax = plt.subplots(figsize=(6, 6))
+        plt.plot(
+            fpr_grid,
+            mean_tpr,
+            label=f"Mean 0 vs 1 (AUC = {mean_score :.2f})",
+            linestyle=":",
+            linewidth=4,
+        )
+        RocCurveDisplay.from_predictions(
+            a_true,
+            y_score_[ab_mask, idx_a],
+            ax=ax,
+            name="0 as positive class",
+        )
+        RocCurveDisplay.from_predictions(
+            b_true,
+            y_score_[ab_mask, idx_b],
+            ax=ax,
+            name="1 as positive class",
+            plot_chance_level=True,
+        )
+        ax.set(
+            xlabel="False Positive Rate",
+            ylabel="True Positive Rate",
+            title="Receiver operating characteristic curve",
+        )
     
     def do_all(self):
         self.get_data()
