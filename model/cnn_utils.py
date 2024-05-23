@@ -123,7 +123,7 @@ class OffTargetPrediction:
         mean_tpr /= 2
         mean_score = auc(fpr_grid, mean_tpr)
 
-        ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
         plt.plot(
             fpr_grid,
             mean_tpr,
