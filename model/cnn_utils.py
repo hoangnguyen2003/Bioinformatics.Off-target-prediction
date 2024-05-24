@@ -137,7 +137,7 @@ class OffTargetPrediction:
             ylabel="True Positive Rate",
             title="Receiver operating characteristic curve",
         )
-        plt.savefig("images/" + self.roc_image_name + ".png")
+        plt.savefig("/images/" + self.roc_image_name + ".png")
 
     def validate(self, X, y):
         y_score_ = self.model.predict(X)
