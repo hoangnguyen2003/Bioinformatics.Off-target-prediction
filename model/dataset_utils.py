@@ -10,9 +10,10 @@ class Dataset:
     def __init__(self, dataset_dir):
         self.dataset_dir = dataset_dir
 
-        self.file_names = ['SITE-Seq_offTarget_wholeDataset']
+        self.file_names = ['SITE-Seq_offTarget_wholeDataset', 'CIRCLE_seq_10gRNA_wholeDataset']
         self.file_column_dict = {
-            'SITE-Seq_offTarget_wholeDataset': ('on_seq', 'off_seq', 'reads', 'on_seq')
+            'SITE-Seq_offTarget_wholeDataset': ('on_seq', 'off_seq', 'reads', 'on_seq'),
+            'CIRCLE_seq_10gRNA_wholeDataset': ('sgRNA_seq', 'off_seq', 'label', 'sgRNA_type')
         }
 
         self.code_dict = {
