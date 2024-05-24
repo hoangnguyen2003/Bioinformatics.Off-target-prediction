@@ -6,12 +6,12 @@ from cnn_utils import OffTargetPrediction
 def main(args):
     off_target_prediction = OffTargetPrediction(dataset_dir=os.path.join(args.dataset_dir, args.dataset_name),
                                                 model_name=args.model_name,
+                                                roc_image_name=args.roc_image_name,
                                                 epochs=args.num_epochs,
                                                 batch_size=args.batch_size,
                                                 lr=args.lr,
                                                 retrain=args.retrain,
                                                 )
-    
     off_target_prediction.do_all()
 
 if __name__ == "__main__":
@@ -37,6 +37,13 @@ if __name__ == "__main__":
         '--model_name',
         type=str,
         help='Trained model name to save',
+        required=True
+    )
+
+    parser.add_argument(
+        '--roc_image_name',
+        type=str,
+        help='Roc curve name to save',
         required=True
     )
 

@@ -18,6 +18,7 @@ class OffTargetPrediction:
     def __init__(self,
                  dataset_dir,
                  model_name,
+                 roc_image_name,
                  epochs,
                  batch_size,
                  lr,
@@ -25,6 +26,7 @@ class OffTargetPrediction:
                  ):
         self.dataset_dir = dataset_dir
         self.model_name = model_name
+        self.roc_image_name = roc_image_name
         self.epochs = epochs
         self.lr = lr
         self.batch_size = batch_size
@@ -86,21 +88,7 @@ class OffTargetPrediction:
                        )
         self.model.save('SaveModel/' + self.model_name + '.h5')
     
-    def validate(self, X, y):
-        y_score_ = self.model.predict(X)
-        y_pred = np.argmax(y_score_, axis=1)
-        y_score = y_score_[:, 1]
-
-        eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
-        eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
-        eval_fun_types = [True, True, True, True, False, False]
-        for index_f, function in enumerate(eval_funs):
-            if eval_fun_types[index_f]:
-                score = np.round(function(y, y_pred), 4)
-            else:
-                score = np.round(function(y, y_score), 4)
-            print('{:<15}{:>15}'.format(eval_fun_names[index_f], score))
-
+    def plotOvoRoc(self, y, y_score_):
         label_binarizer = LabelBinarizer().fit(self.y_train)
         fpr_grid = np.linspace(0.0, 1.0, 1000)
 
@@ -127,7 +115,7 @@ class OffTargetPrediction:
         plt.plot(
             fpr_grid,
             mean_tpr,
-            label=f"Mean 0 vs 1 (AUC = {mean_score :.2f})",
+            label=f"Mean (AUC = {mean_score :.2f})",
             linestyle=":",
             linewidth=4,
         )
@@ -135,13 +123,13 @@ class OffTargetPrediction:
             a_true,
             y_score_[ab_mask, idx_a],
             ax=ax,
-            name="0 as positive class",
+            name="Off-target as negative class",
         )
         RocCurveDisplay.from_predictions(
             b_true,
             y_score_[ab_mask, idx_b],
             ax=ax,
-            name="1 as positive class",
+            name="Off-target as positive class",
             plot_chance_level=True,
         )
         ax.set(
@@ -149,7 +137,24 @@ class OffTargetPrediction:
             ylabel="True Positive Rate",
             title="Receiver operating characteristic curve",
         )
-        plt.savefig('roc.png')
+        plt.savefig("images/" + self.roc_image_name + ".png")
+
+    def validate(self, X, y):
+        y_score_ = self.model.predict(X)
+        y_pred = np.argmax(y_score_, axis=1)
+        y_score = y_score_[:, 1]
+
+        eval_funs = [accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, average_precision_score]
+        eval_fun_names = ['Accuracy', 'F1 score', 'Precision', 'Recall', 'ROC AUC', 'PR AUC']
+        eval_fun_types = [True, True, True, True, False, False]
+        for index_f, function in enumerate(eval_funs):
+            if eval_fun_types[index_f]:
+                score = np.round(function(y, y_pred), 4)
+            else:
+                score = np.round(function(y, y_score), 4)
+            print('{:<15}{:>15}'.format(eval_fun_names[index_f], score))
+
+        self.plotOvoRoc(y, y_score_)
     
     def do_all(self):
         self.get_data()
