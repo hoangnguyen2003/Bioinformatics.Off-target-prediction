@@ -28,8 +28,9 @@ class OffTargetPrediction:
         self.model_name = model_name
         self.roc_image_name = roc_image_name
         self.epochs = epochs
-        self.lr = lr
         self.batch_size = batch_size
+        self.lr = lr
+        self.retrain = retrain
         self.num_classes = 2
 
         os.environ['CUDA_VISIBLE_DEVICES'] = '1'
@@ -161,5 +162,6 @@ class OffTargetPrediction:
     
     def do_all(self):
         self.get_data()
-        self.train(self.X_train, self.y_train, self.X_val, self.y_val)
+        if self.retrain:
+            self.train(self.X_train, self.y_train, self.X_val, self.y_val)
         self.validate(self.X_test, self.y_test)
