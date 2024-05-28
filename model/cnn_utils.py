@@ -59,7 +59,7 @@ class OffTargetPrediction:
         bn_output = BatchNormalization()(conv_output)
 
         pooling_output = keras.layers.MaxPool2D(pool_size=(1, 5),
-                                                strides=None, padding='valid')(bn_output)
+                                                strides=(1, 5), padding='valid')(bn_output)
 
         flatten_output = Flatten()(pooling_output)
 
