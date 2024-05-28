@@ -36,20 +36,6 @@ class Dataset:
             sgRNAs = data[columns[0]]
             DNAs = data[columns[1]]
             labels = data[columns[2]]
-
-            sgRNAs = sgRNAs.apply(lambda sgRNA: sgRNA.upper())
-            DNAs = DNAs.apply(lambda DNA: DNA.upper())
-            labels = labels.apply(lambda label: int(label != 0))
-
-            sgRNAs_new = []
-            for index, sgRNA in enumerate(sgRNAs):
-                sgRNA = list(sgRNA)
-                sgRNA[-3] = DNAs[index][-3]
-                sgRNAs_new.append(''.join(sgRNA))
-
-            sgRNAs = pd.Series(sgRNAs_new)
-            data = pd.DataFrame.from_dict({'sgRNAs':sgRNAs, 'DNAs':DNAs, 'labels':labels})
-            return data[data.apply(lambda row: 'N' not in list(row['DNAs']), axis = 1)]
         else:
             xlrd.xlsx.ensure_elementtree_imported(False, None)
             xlrd.xlsx.Element_has_iter = True
@@ -58,13 +44,29 @@ class Dataset:
             hek_sgRNA_list = sheet_hek293t.col_values(1)
             hek_DNA_list = sheet_hek293t.col_values(2)
             hek_labels_list = sheet_hek293t.col_values(3)
+
             sheet_K562 = InputFile.sheet_by_name('K562')
             K562_sgRNA_list = sheet_K562.col_values(1)
             K562_DNA_list = sheet_K562.col_values(2)
             K562_labels_list = sheet_K562.col_values(3)
-            print(K562_DNA_list)
-            print(K562_labels_list)
-            exit()
+            
+            sgRNAs = hek_sgRNA_list + K562_sgRNA_list
+            DNAs = hek_DNA_list + K562_DNA_list
+            labels = hek_labels_list + K562_labels_list
+
+        sgRNAs = sgRNAs.apply(lambda sgRNA: sgRNA.upper())
+        DNAs = DNAs.apply(lambda DNA: DNA.upper())
+        labels = labels.apply(lambda label: int(label != 0))
+
+        sgRNAs_new = []
+        for index, sgRNA in enumerate(sgRNAs):
+            sgRNA = list(sgRNA)
+            sgRNA[-3] = DNAs[index][-3]
+            sgRNAs_new.append(''.join(sgRNA))
+
+        sgRNAs = pd.Series(sgRNAs_new)
+        data = pd.DataFrame.from_dict({'sgRNAs': sgRNAs, 'DNAs': DNAs, 'labels': labels})
+        return data[data.apply(lambda row: 'N' not in list(row['DNAs']), axis = 1)]
 
     def preprocess_function(self, guide_seq, off_seq):
         gRNA_list = list(guide_seq)
