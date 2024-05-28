@@ -116,27 +116,23 @@ class OffTargetPrediction:
         plt.plot(
             fpr_grid,
             mean_tpr,
-            label=f"Mean (AUC = {mean_score :.3f})",
+            label=f"Mean (AUC = {mean_score :.2f})",
             linestyle=":",
             linewidth=4,
         )
-        t_1 = RocCurveDisplay.from_predictions(
+        RocCurveDisplay.from_predictions(
             a_true,
             y_score_[ab_mask, idx_a],
             ax=ax,
             name="Off-target as negative class",
         )
-        t_1.line_.set_label(f"Off-target as negative class (AUC = {t_1.roc_auc:.3f})")
-        t_1.ax_.legend()
-        t_2 = RocCurveDisplay.from_predictions(
+        RocCurveDisplay.from_predictions(
             b_true,
             y_score_[ab_mask, idx_b],
             ax=ax,
             name="Off-target as positive class",
             plot_chance_level=True,
         )
-        t_2.line_.set_label(f"Off-target as positive class (AUC = {t_2.roc_auc:.3f})")
-        t_2.ax_.legend()
         ax.set(
             xlabel="False Positive Rate",
             ylabel="True Positive Rate",
