@@ -50,9 +50,9 @@ class Dataset:
             K562_DNA_list = sheet_K562.col_values(2)
             K562_labels_list = sheet_K562.col_values(3)
             
-            sgRNAs = hek_sgRNA_list + K562_sgRNA_list
-            DNAs = hek_DNA_list + K562_DNA_list
-            labels = hek_labels_list + K562_labels_list
+            sgRNAs = pd.Series(hek_sgRNA_list + K562_sgRNA_list)
+            DNAs = pd.Series(hek_DNA_list + K562_DNA_list)
+            labels = pd.Series(hek_labels_list + K562_labels_list)
 
         sgRNAs = sgRNAs.apply(lambda sgRNA: sgRNA.upper())
         DNAs = DNAs.apply(lambda DNA: DNA.upper())
