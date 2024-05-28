@@ -51,6 +51,8 @@ class Dataset:
             data = pd.DataFrame.from_dict({'sgRNAs':sgRNAs, 'DNAs':DNAs, 'labels':labels})
             return data[data.apply(lambda row: 'N' not in list(row['DNAs']), axis = 1)]
         else:
+            xlrd.xlsx.ensure_elementtree_imported(False, None)
+            xlrd.xlsx.Element_has_iter = True
             InputFile = xlrd.open_workbook(self.dataset_dir)
             sheet_hek293t = InputFile.sheet_by_name('hek293t')
             hek_sgRNA_list = sheet_hek293t.col_values(1)
