@@ -13,10 +13,15 @@ class Dataset:
 
         self.file_names = ['SITE-Seq_offTarget_wholeDataset',
                            'CIRCLE_seq_10gRNA_wholeDataset',
-                           'off_data_twoset']
+                           'off_data_twoset',
+                           'changeseq',
+                           'ttiss',
+                           ]
         self.file_column_dict = {
             'SITE-Seq_offTarget_wholeDataset': ('on_seq', 'off_seq', 'reads', 'on_seq'),
-            'CIRCLE_seq_10gRNA_wholeDataset': ('sgRNA_seq', 'off_seq', 'label', 'sgRNA_type')
+            'CIRCLE_seq_10gRNA_wholeDataset': ('sgRNA_seq', 'off_seq', 'label', 'sgRNA_type'),
+            'changeseq': ('On', 'Off', 'Active'),
+            'ttiss': ('On', 'Off', 'Active'),
         }
 
         self.code_dict = {
