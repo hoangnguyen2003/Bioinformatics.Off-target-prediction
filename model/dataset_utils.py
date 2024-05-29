@@ -162,8 +162,7 @@ class Dataset:
         sgRNA_list = []
         position_address = [[] for i in range(len(sgRNAList))]
         index = 0
-        for line in dataset:
-            ll = [i for i in line.strip().split(',')]
+        for ll in dataset:
             sgRNA_item = ll[0]
             data_item = ll
             for i in range(len(sgRNAList)):
