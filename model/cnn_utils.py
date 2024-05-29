@@ -1,17 +1,18 @@
 import dataset_utils
 
-import os
 import random
 import numpy as np
 import tensorflow as tf
-import keras
 import matplotlib.pyplot as plt
+from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
+from sklearn.preprocessing import LabelBinarizer
+import os 
+os.environ["KERAS_BACKEND"] = "jax" 
+import keras
+from keras import backend as K
 from keras.utils import to_categorical
 from keras.models import Model, load_model
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
-from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
-from sklearn.preprocessing import LabelBinarizer
-from keras import backend as K
 seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
