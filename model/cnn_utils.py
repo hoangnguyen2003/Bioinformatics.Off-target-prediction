@@ -11,33 +11,32 @@ from keras.models import Model, load_model
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
 from sklearn.preprocessing import LabelBinarizer
-# from keras import backend as K
-# os.environ["KERAS_BACKEND"] = "jax" 
+from keras import backend as K
 seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
 
-# def binary_PFA(y_true, y_pred, threshold=K.variable(value=0.5)):
-#     y_pred = K.cast(y_pred >= threshold, 'float32')
-#     N = K.sum(1 - y_true)
-#     FP = K.sum(y_pred - y_pred * y_true)
-#     return FP / N
+def binary_PFA(y_true, y_pred, threshold=K.variable(value=0.5)):
+    y_pred = K.cast(y_pred >= threshold, 'float32')
+    N = K.sum(1 - y_true)
+    FP = K.sum(y_pred - y_pred * y_true)
+    return FP / N
 
-# def binary_PTA(y_true, y_pred, threshold=K.variable(value=0.5)):
-#     y_pred = K.cast(y_pred >= threshold, 'float32')
-#     P = K.sum(y_true)
-#     TP = K.sum(y_pred * y_true)
-#     return TP / P
+def binary_PTA(y_true, y_pred, threshold=K.variable(value=0.5)):
+    y_pred = K.cast(y_pred >= threshold, 'float32')
+    P = K.sum(y_true)
+    TP = K.sum(y_pred * y_true)
+    return TP / P
 
-# def roc_auc(y_true, y_pred):
-#     ptas = tf.stack([binary_PTA(y_true, y_pred, k)
-#                      for k in np.linspace(0, 1, 1000)], axis=0)
-#     pfas = tf.stack([binary_PFA(y_true, y_pred, k)
-#                      for k in np.linspace(0, 1, 1000)], axis=0)
-#     pfas = tf.concat([tf.ones((1,)), pfas], axis=0)
-#     binSizes = -(pfas[1:] - pfas[:-1])
-#     s = ptas * binSizes
-#     return K.sum(s, axis=0)
+def roc_auc(y_true, y_pred):
+    ptas = tf.stack([binary_PTA(y_true, y_pred, k)
+                     for k in np.linspace(0, 1, 1000)], axis=0)
+    pfas = tf.stack([binary_PFA(y_true, y_pred, k)
+                     for k in np.linspace(0, 1, 1000)], axis=0)
+    pfas = tf.concat([tf.ones((1,)), pfas], axis=0)
+    binSizes = -(pfas[1:] - pfas[:-1])
+    s = ptas * binSizes
+    return K.sum(s, axis=0)
 
 class OffTargetPrediction:
     def __init__(self,
@@ -102,8 +101,8 @@ class OffTargetPrediction:
         adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
 
         if self.is_sampling or self.is_loso:
-            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
-            # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
+            # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
+            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
         else:
             self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
         self.model.summary()
