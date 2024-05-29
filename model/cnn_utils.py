@@ -265,7 +265,7 @@ class OffTargetPrediction:
             plt.title("model accuracy")
             plt.xlabel("epoch")
             plt.ylabel("Accuracy")
-            plt.legend(['train','test'],loc='upper left')
+            plt.legend(['train','val'],loc='upper left')
 
             save_path = os.path.join("images", "")
             os.makedirs(save_path, exist_ok=True)
@@ -277,7 +277,7 @@ class OffTargetPrediction:
             plt.title("model loss")
             plt.xlabel("epoch")
             plt.ylabel("Loss")
-            plt.legend(['train','test'],loc='upper left')
+            plt.legend(['train','val'],loc='upper left')
 
             plt.savefig(os.path.join(save_path, self.roc_image_name + "_22.png"))
 
