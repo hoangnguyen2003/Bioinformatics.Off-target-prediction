@@ -154,16 +154,15 @@ class Dataset:
             os.path.basename(self.dataset_dir))[0])
         train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
         val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
-        print(val)
         dataset = pd.concat([train, val])
-        print(dataset)
+
         sgRNAList = dataset['sgRNAs']
         data_list = []
         sgRNA_list = []
         position_address = [[] for i in range(len(sgRNAList))]
         index = 0
         for ll in dataset:
-            sgRNA_item = ll[0]
+            sgRNA_item = ll['sgRNAs']
             data_item = ll
             for i in range(len(sgRNAList)):
                 print(sgRNA_item)
