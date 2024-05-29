@@ -219,7 +219,7 @@ class OffTargetPrediction:
                 Xtest = np.array(Xtest)
                 NUM_BATCH = int(len(train_negative) / self.batch_size)
 
-                History = self.model.fit(self.train_flow(train_negative, train_positive, self.batch_size),
+                History = self.model.fit_generator(self.train_flow(train_negative, train_positive, self.batch_size),
                                      shuffle=True,
                                      validation_data=self.valid_flow(val_negative, val_positive, 45),
                                      validation_steps=1,
@@ -252,7 +252,7 @@ class OffTargetPrediction:
             print("PRC_Mean=%0.3f",np.mean(PRC_Mean))
             
         elif self.is_sampling:
-            History = self.model.fit_generator(self.train_flow(self.train_negative, self.train_positive, self.batch_size),
+            History = self.model.fit(self.train_flow(self.train_negative, self.train_positive, self.batch_size),
                                      shuffle=True,
                                      validation_data=self.valid_flow(self.val_negative, self.val_positive, 45),
                                      validation_steps=1,
