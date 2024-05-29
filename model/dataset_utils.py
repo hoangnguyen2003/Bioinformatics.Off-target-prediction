@@ -102,3 +102,138 @@ class Dataset:
         return X_train_encodings, to_categorical(
             train['labels'], num_classes=num_classes), X_val_encodings, to_categorical(
                 val['labels'], num_classes=num_classes), X_test_encodings, test['labels']
+    
+    def get_final_ds2(self, num_classes):
+        dataset = self.load_data(os.path.splitext(
+            os.path.basename(self.dataset_dir))[0])
+        train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
+        val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
+
+        for idx, f in enumerate((train, val, test)):
+            negative = []
+            positive = []
+            for i in f:
+                label_item = i['labels']
+                if label_item != 0:
+                    positive.append(i)
+                else:
+                    negative.append(i)
+            if idx == 0:
+                train_negative = negative
+                train_positive = positive
+            elif idx == 1:
+                val_negative = negative
+                val_positive = positive
+            else:
+                test_negative = negative
+                test_positive = positive
+
+        train_negative = np.array(train_negative.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        train_positive = np.array(train_positive.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        val_negative = np.array(val_negative.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        val_positive = np.array(val_positive.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        test_negative = np.array(test_negative.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        test_positive = np.array(test_positive.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+
+        return train_negative, train_positive, val_negative, val_positive, test_negative, test_positive
+    
+    def get_final_ds3(self, num_classes):
+        dataset = self.load_data(os.path.splitext(
+            os.path.basename(self.dataset_dir))[0])
+        train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
+        val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
+
+        dataset = train + val
+
+        sgRNAList = dataset['sgRNAs']
+        data_list = []
+        sgRNA_list = []
+        position_address = [[] for i in range(len(sgRNAList))]
+        index = 0
+        for line in dataset:
+            ll = [i for i in line.strip().split(',')]
+            sgRNA_item = ll[0]
+            data_item = ll
+            for i in range(len(sgRNAList)):
+                if sgRNA_item == sgRNAList[i]:
+                    position_address[i].append(index)
+            data_list.append(data_item)
+            sgRNA_list.append(sgRNA_item)
+            index += 1
+        position = []
+        for i in range(len(sgRNAList)):
+            position.append([sgRNAList[i], position_address[i]])
+        dict_address = dict(position)
+
+        data_list['sgRNAs'] = np.array(data_list.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+
+        X_test_encodings = np.array(test.apply(
+            lambda row: self.preprocess_function(
+                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+
+        return data_list['sgRNA'], sgRNA_list, dict_address, X_test_encodings, test['labels']
+
+
+        # train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
+        # val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
+
+        # for idx, f in enumerate((train, val, test)):
+        #     data_list = []
+        #     sgRNA_list = []
+        #     position_address = [[] for i in range(len(sgRNAList))]
+        #     index = 0
+        #     for line in f:
+        #         sgRNA_item = line['sgRNAs']
+        #         data_item = line
+        #         for i in range(len(sgRNAList)):
+        #             if sgRNA_item == sgRNAList[i]:
+        #                 position_address[i].append(index)
+        #         data_list.append(data_item)
+        #         sgRNA_list.append(sgRNA_item)
+        #         index += 1
+        #     position = []
+        #     for i in range(len(sgRNAList)):
+        #         position.append([sgRNAList[i],position_address[i]])
+        #     dict_address = dict(position)
+            
+        #     if idx == 0:
+        #         data_list_train = 
+        #         sgRNA_list_train = 
+        #         dict_address_train = 
+        #     elif idx == 1:
+        #     else:
+
+        # train_negative = np.array(train_negative.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # train_positive = np.array(train_positive.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # val_negative = np.array(val_negative.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # val_positive = np.array(val_positive.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # test_negative = np.array(test_negative.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # test_positive = np.array(test_positive.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+
+        # return train_negative, train_positive, val_negative, val_positive, test_negative, test_positive

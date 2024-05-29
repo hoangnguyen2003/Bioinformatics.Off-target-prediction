@@ -11,6 +11,8 @@ def main(args):
                                                 batch_size=args.batch_size,
                                                 lr=args.lr,
                                                 retrain=args.retrain,
+                                                is_sampling=args.sampling,
+                                                is_loso=args.loso,
                                                 )
     off_target_prediction.do_all()
 
@@ -72,6 +74,20 @@ if __name__ == "__main__":
         '--retrain',
         type=int,
         help='Whether to retrain (0 - False, 1 - True)',
+        default=0
+    )
+
+    parser.add_argument(
+        '--sampling',
+        type=int,
+        help='Whether to sample for training data (0 - False, 1 - True)',
+        default=0
+    )
+
+    parser.add_argument(
+        '--loso',
+        type=int,
+        help='Whether to leave-one-sgRNA-out (0 - False, 1 - True)',
         default=0
     )
 
