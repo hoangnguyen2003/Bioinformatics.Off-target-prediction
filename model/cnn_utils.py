@@ -102,8 +102,8 @@ class OffTargetPrediction:
         adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
 
         if self.is_sampling or self.is_loso:
-            # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
-            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
+            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
+            # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
         else:
             self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
         self.model.summary()
@@ -282,16 +282,7 @@ class OffTargetPrediction:
             plt.savefig(os.path.join(save_path, self.roc_image_name + "_22.png"))
 
             plt.show()
-            plt.plot(History.history['roc_auc'])
-            plt.plot(History.history['val_roc_auc'])
-            plt.title("model auc")
-            plt.xlabel("epoch")
-            plt.ylabel("Loss")
-            plt.legend(['train','test'],loc='upper left')
-
-            plt.savefig(os.path.join(save_path, self.roc_image_name + "_33.png"))
-
-            plt.show()
+            
             plt.plot(History.history['lr'])
 
             plt.savefig(os.path.join(save_path, self.roc_image_name + "_44.png"))
