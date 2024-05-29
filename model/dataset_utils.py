@@ -154,9 +154,9 @@ class Dataset:
             os.path.basename(self.dataset_dir))[0])
         train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
         val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
-
+        print(val)
         dataset = train + val
-
+        print(dataset)
         sgRNAList = dataset['sgRNAs']
         data_list = []
         sgRNA_list = []
