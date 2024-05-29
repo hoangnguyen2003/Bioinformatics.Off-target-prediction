@@ -156,7 +156,8 @@ class Dataset:
         X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        return train_negative, train_positive, val_negative, val_positive, X_test_encodings, test['labels']
+        return train_negative, train_positive, val_negative, val_positive, X_test_encodings, test['labels'], to_categorical(
+            train['labels'], num_classes=num_classes)
     
     def get_final_ds3(self, num_classes):
         dataset = self.load_data(os.path.splitext(
