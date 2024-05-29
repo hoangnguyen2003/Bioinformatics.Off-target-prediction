@@ -160,7 +160,7 @@ class Dataset:
         dataset = pd.concat([train, val])
 
         
-        data_list = []
+        data_list = pd.DataFrame()
         sgRNA_list = []
         position_address = [[] for i in range(len(sgRNAList))]
         index = 0
@@ -174,12 +174,10 @@ class Dataset:
             data_list.append(data_item)
             sgRNA_list.append(sgRNA_item)
             index += 1
-            print(index)
         position = []
         for i in range(len(sgRNAList)):
             position.append([sgRNAList[i], position_address[i]])
         dict_address = dict(position)
-        print("a")
         data_list['sgRNAs'] = np.array(data_list.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
