@@ -112,7 +112,7 @@ class Dataset:
         for idx, f in enumerate((train, val, test)):
             negative = []
             positive = []
-            for i in f:
+            for iiii, i in f.iterrows():
                 label_item = i['labels']
                 if label_item != 0:
                     positive.append(i)
