@@ -156,7 +156,7 @@ class Dataset:
         val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
         dataset = pd.concat([train, val])
 
-        sgRNAList = dataset['sgRNAs']
+        sgRNAList = dataset['sgRNAs'].reset_index(drop=True)
         data_list = []
         sgRNA_list = []
         position_address = [[] for i in range(len(sgRNAList))]
