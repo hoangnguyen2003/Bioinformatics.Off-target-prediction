@@ -171,7 +171,7 @@ class Dataset:
             for i in range(len(sgRNAList)):
                 if sgRNA_item == sgRNAList[i]:
                     position_address[i].append(index)
-            data_list.append(data_item)
+            data_list = pd.concat([data_list, data_item])
             sgRNA_list.append(sgRNA_item)
             index += 1
         position = []
