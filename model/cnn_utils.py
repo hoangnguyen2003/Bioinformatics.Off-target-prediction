@@ -183,7 +183,7 @@ class OffTargetPrediction:
                     Index_Positive = np.random.randint(0, Num_Positive, batchsize, dtype='int32')
                     num_counter = 0
 
-    def train(self, X_train, y_train, X_val, y_val):
+    def train(self, X_train=None, y_train=None, X_val=None, y_val=None):
         if self.is_sampling and self.is_loso:
             print(3)
             keys = self.dict_address.keys()
@@ -380,6 +380,9 @@ class OffTargetPrediction:
     def do_all(self):
         self.get_data()
         if self.retrain:
-            self.train(self.X_train, self.y_train, self.X_val, self.y_val)
+            if self.is_sampling:
+                self.train()
+            else:
+                self.train(self.X_train, self.y_train, self.X_val, self.y_val)
         if not self.is_sampling or not self.is_loso:
             self.validate(self.X_test, self.y_test)
