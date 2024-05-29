@@ -174,21 +174,19 @@ class Dataset:
             data_list.append(data_item)
             sgRNA_list.append(sgRNA_item)
             index += 1
-            print(index)
         data_list = pd.DataFrame(data_list, columns=['sgRNAs', 'DNAs', 'labels'])
         position = []
         for i in range(len(sgRNAList)):
             position.append([sgRNAList[i], position_address[i]])
         dict_address = dict(position)
-        data_list['sgRNAs'] = np.array(data_list.apply(
+        data_list = np.array(data_list.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        print("b")
         X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
 
-        return data_list['sgRNA'], sgRNA_list, dict_address, X_test_encodings, test['labels']
+        return data_list, sgRNA_list, dict_address, X_test_encodings, test['labels']
 
 
         # train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
