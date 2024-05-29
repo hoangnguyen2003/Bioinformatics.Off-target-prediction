@@ -121,7 +121,7 @@ class OffTargetPrediction:
 
         elif self.is_sampling:
             ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds2(num_classes=self.num_classes)
-            self.train_negative, self.train_positive, self.val_negative, self.val_positive, self.test_negative, self.test_positive = ds
+            self.train_negative, self.train_positive, self.val_negative, self.val_positive, self.X_test, self.y_test = ds
             self.num_batch = int(len(self.train_negative) / self.batch_size)
         else:
             ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=self.num_classes)

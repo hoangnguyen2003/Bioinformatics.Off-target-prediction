@@ -132,8 +132,8 @@ class Dataset:
         train_positive = pd.DataFrame(train_positive, columns=['sgRNAs', 'DNAs', 'labels'])
         val_negative = pd.DataFrame(val_negative, columns=['sgRNAs', 'DNAs', 'labels'])
         val_positive = pd.DataFrame(val_positive, columns=['sgRNAs', 'DNAs', 'labels'])
-        test_negative = pd.DataFrame(test_negative, columns=['sgRNAs', 'DNAs', 'labels'])
-        test_positive = pd.DataFrame(test_positive, columns=['sgRNAs', 'DNAs', 'labels'])
+        # test_negative = pd.DataFrame(test_negative, columns=['sgRNAs', 'DNAs', 'labels'])
+        # test_positive = pd.DataFrame(test_positive, columns=['sgRNAs', 'DNAs', 'labels'])
 
         train_negative = np.array(train_negative.apply(
             lambda row: self.preprocess_function(
@@ -147,14 +147,16 @@ class Dataset:
         val_positive = np.array(val_positive.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        test_negative = np.array(test_negative.apply(
+        # test_negative = np.array(test_negative.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        # test_positive = np.array(test_positive.apply(
+        #     lambda row: self.preprocess_function(
+        #         row['sgRNAs'], row['DNAs']), axis = 1).to_list())
+        X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-        test_positive = np.array(test_positive.apply(
-            lambda row: self.preprocess_function(
-                row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-
-        return train_negative, train_positive, val_negative, val_positive, test_negative, test_positive
+        return train_negative, train_positive, val_negative, val_positive, X_test_encodings, test['labels']
     
     def get_final_ds3(self, num_classes):
         dataset = self.load_data(os.path.splitext(
