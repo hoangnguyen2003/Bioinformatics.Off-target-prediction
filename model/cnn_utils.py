@@ -12,7 +12,7 @@ from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
 from sklearn.preprocessing import LabelBinarizer
 from keras import backend as K
-
+os.environ["KERAS_BACKEND"] = "jax" 
 seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
