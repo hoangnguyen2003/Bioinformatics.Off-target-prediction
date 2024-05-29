@@ -127,7 +127,7 @@ class OffTargetPrediction:
             ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds(num_classes=self.num_classes)
             self.X_train, self.y_train, self.X_val, self.y_val, self.X_test, self.y_test = ds
 
-    def train_flow(Train_Negative, Train_Positive, batchsize):
+    def train_flow(self, Train_Negative, Train_Positive, batchsize):
         train_Negative = Train_Negative
         train_Positive = Train_Positive
 
@@ -156,7 +156,7 @@ class OffTargetPrediction:
                         Index_Positive = np.random.randint(0, Num_Positive, batchsize, dtype='int32')
                         num_counter = 0
 
-    def valid_flow(self, Test_Negative, Test_Positive, batchsize):
+    def valid_flow(self, self, Test_Negative, Test_Positive, batchsize):
         valid_Negative = Test_Negative
         valid_Positive = Test_Positive
 
