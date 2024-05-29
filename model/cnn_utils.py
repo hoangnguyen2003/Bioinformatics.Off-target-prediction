@@ -17,27 +17,27 @@ seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
 
-def binary_PFA(y_true, y_pred, threshold=K.variable(value=0.5)):
-    y_pred = K.cast(y_pred >= threshold, 'float32')
-    N = K.sum(1 - y_true)
-    FP = K.sum(y_pred - y_pred * y_true)
-    return FP / N
+# def binary_PFA(y_true, y_pred, threshold=K.variable(value=0.5)):
+#     y_pred = K.cast(y_pred >= threshold, 'float32')
+#     N = K.sum(1 - y_true)
+#     FP = K.sum(y_pred - y_pred * y_true)
+#     return FP / N
 
-def binary_PTA(y_true, y_pred, threshold=K.variable(value=0.5)):
-    y_pred = K.cast(y_pred >= threshold, 'float32')
-    P = K.sum(y_true)
-    TP = K.sum(y_pred * y_true)
-    return TP / P
+# def binary_PTA(y_true, y_pred, threshold=K.variable(value=0.5)):
+#     y_pred = K.cast(y_pred >= threshold, 'float32')
+#     P = K.sum(y_true)
+#     TP = K.sum(y_pred * y_true)
+#     return TP / P
 
-def roc_auc(y_true, y_pred):
-    ptas = tf.stack([binary_PTA(y_true, y_pred, k)
-                     for k in np.linspace(0, 1, 1000)], axis=0)
-    pfas = tf.stack([binary_PFA(y_true, y_pred, k)
-                     for k in np.linspace(0, 1, 1000)], axis=0)
-    pfas = tf.concat([tf.ones((1,)), pfas], axis=0)
-    binSizes = -(pfas[1:] - pfas[:-1])
-    s = ptas * binSizes
-    return K.sum(s, axis=0)
+# def roc_auc(y_true, y_pred):
+#     ptas = tf.stack([binary_PTA(y_true, y_pred, k)
+#                      for k in np.linspace(0, 1, 1000)], axis=0)
+#     pfas = tf.stack([binary_PFA(y_true, y_pred, k)
+#                      for k in np.linspace(0, 1, 1000)], axis=0)
+#     pfas = tf.concat([tf.ones((1,)), pfas], axis=0)
+#     binSizes = -(pfas[1:] - pfas[:-1])
+#     s = ptas * binSizes
+#     return K.sum(s, axis=0)
 
 class OffTargetPrediction:
     def __init__(self,
