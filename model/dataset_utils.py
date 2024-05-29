@@ -128,6 +128,13 @@ class Dataset:
                 test_negative = negative
                 test_positive = positive
 
+        train_negative = pd.DataFrame(train_negative, columns=['sgRNAs', 'DNAs', 'labels'])
+        train_positive = pd.DataFrame(train_positive, columns=['sgRNAs', 'DNAs', 'labels'])
+        val_negative = pd.DataFrame(val_negative, columns=['sgRNAs', 'DNAs', 'labels'])
+        val_positive = pd.DataFrame(val_positive, columns=['sgRNAs', 'DNAs', 'labels'])
+        test_negative = pd.DataFrame(test_negative, columns=['sgRNAs', 'DNAs', 'labels'])
+        test_positive = pd.DataFrame(test_positive, columns=['sgRNAs', 'DNAs', 'labels'])
+
         train_negative = np.array(train_negative.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
