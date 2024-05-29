@@ -171,15 +171,16 @@ class Dataset:
             data_list.append(data_item)
             sgRNA_list.append(sgRNA_item)
             index += 1
+            print(index)
         position = []
         for i in range(len(sgRNAList)):
             position.append([sgRNAList[i], position_address[i]])
         dict_address = dict(position)
-
+        print("a")
         data_list['sgRNAs'] = np.array(data_list.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
-
+        print("b")
         X_test_encodings = np.array(test.apply(
             lambda row: self.preprocess_function(
                 row['sgRNAs'], row['DNAs']), axis = 1).to_list())
