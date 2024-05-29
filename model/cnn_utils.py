@@ -111,9 +111,9 @@ class OffTargetPrediction:
     def get_data(self):
         if self.is_sampling and self.is_loso:
             self.data, self.sgRNA_list, self.dict_address, self.X_test, self.y_test = dataset_utils.Dataset(self.dataset_dir).get_final_ds3(num_classes=self.num_classes)
-            print(1)
             positoin_address = []
             for i in self.sgRNA_list:
+                print(i)
                 address_index = [x for x in range(len(self.sgRNA_list)) if self.sgRNA_list[x] == i]
                 positoin_address.append([i, address_index])
             self.dict_address = dict(positoin_address)
