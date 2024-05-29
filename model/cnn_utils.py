@@ -283,11 +283,6 @@ class OffTargetPrediction:
 
             plt.show()
             
-            plt.plot(History.history['lr'])
-
-            plt.savefig(os.path.join(save_path, self.roc_image_name + "_44.png"))
-
-            plt.show()
         else:
             self.model.fit(X_train, y_train,
                         batch_size=self.batch_size, epochs=self.epochs,
