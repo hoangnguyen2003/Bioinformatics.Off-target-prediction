@@ -166,6 +166,8 @@ class Dataset:
             sgRNA_item = ll[0]
             data_item = ll
             for i in range(len(sgRNAList)):
+                print(sgRNA_item)
+                print(sgRNAList[i])
                 if sgRNA_item == sgRNAList[i]:
                     position_address[i].append(index)
             data_list.append(data_item)
