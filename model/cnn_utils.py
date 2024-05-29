@@ -156,7 +156,7 @@ class OffTargetPrediction:
                         Index_Positive = np.random.randint(0, Num_Positive, batchsize, dtype='int32')
                         num_counter = 0
 
-    def valid_flow(self, self, Test_Negative, Test_Positive, batchsize):
+    def valid_flow(self, Test_Negative, Test_Positive, batchsize):
         valid_Negative = Test_Negative
         valid_Positive = Test_Positive
 
