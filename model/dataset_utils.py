@@ -152,12 +152,16 @@ class Dataset:
     def get_final_ds3(self, num_classes):
         dataset = self.load_data(os.path.splitext(
             os.path.basename(self.dataset_dir))[0])
+        
+        sgRNAList = dataset['sgRNAs'].drop_duplicates().reset_index(drop=True)
+        print(np.array(sgRNAList).shape)
+        print(sgRNAList)
+
         train, val_test = train_test_split(dataset, test_size=0.2, random_state=seed)
         val, test = train_test_split(val_test, test_size=0.5, random_state=seed)
         dataset = pd.concat([train, val])
 
-        sgRNAList = dataset['sgRNAs'].drop_duplicates().reset_index(drop=True)
-        print(np.array(sgRNAList).shape)
+        
         data_list = []
         sgRNA_list = []
         position_address = [[] for i in range(len(sgRNAList))]
