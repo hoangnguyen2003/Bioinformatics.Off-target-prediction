@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 import matplotlib.pyplot as plt
-from keras.utils import np_utils
+from keras.utils import to_categorical
 from keras.models import Model, load_model
 from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
@@ -148,7 +148,7 @@ class OffTargetPrediction:
                     Y_input.append(1)
                     num_counter += 1
                     if num_counter == batchsize:
-                        Y_input = np_utils.to_categorical(Y_input)
+                        Y_input = to_categorical(Y_input, num_classes=2)
                         yield (np.array(X_input), np.array(Y_input))
                         X_input = []
                         Y_input = []
@@ -175,7 +175,7 @@ class OffTargetPrediction:
                 Y_input.append(1)
                 num_counter += 1
                 if num_counter == batchsize:
-                    Y_input = np_utils.to_categorical(Y_input)
+                    Y_input = to_categorical(Y_input, num_classes=2)
                     yield (np.array(X_input), np.array(Y_input))
                     X_input = []
                     Y_input = []
