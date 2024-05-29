@@ -62,7 +62,6 @@ class OffTargetPrediction:
         self.is_sampling = is_sampling
         self.is_loso = is_loso
 
-        os.environ['CUDA_VISIBLE_DEVICES'] = '1'
         os.environ['PYTHONHASHSEED'] = str(seed)
 
         if not retrain:
@@ -112,12 +111,13 @@ class OffTargetPrediction:
     def get_data(self):
         if self.is_sampling and self.is_loso:
             self.data, self.sgRNA_list, self.dict_address, self.X_test, self.y_test = dataset_utils.Dataset(self.dataset_dir).get_final_ds3(num_classes=self.num_classes)
-
+            print(1)
             positoin_address = []
             for i in self.sgRNA_list:
                 address_index = [x for x in range(len(self.sgRNA_list)) if self.sgRNA_list[x] == i]
                 positoin_address.append([i, address_index])
             self.dict_address = dict(positoin_address)
+            print(2)
 
         elif self.is_sampling:
             ds = dataset_utils.Dataset(self.dataset_dir).get_final_ds2(num_classes=self.num_classes)
@@ -185,12 +185,11 @@ class OffTargetPrediction:
 
     def train(self, X_train, y_train, X_val, y_val):
         if self.is_sampling and self.is_loso:
+            print(3)
             keys = self.dict_address.keys()
 
             ROC_Mean = [[0 for i in range(3)] for j in range(len(keys))]
             PRC_Mean = [[0 for i in range(3)] for j in range(len(keys))]
-            Pearson_Mean = [[0 for i in range(3)] for j in range(len(keys))]
-            Spearman_Mean = [[0 for i in range(3)] for j in range(len(keys))]
             sgRNA_num = 0
 
             for key in keys:
