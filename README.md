@@ -1,5 +1,5 @@
 # Tin sinh học
-## Phương pháp Học sâu dự đoán hoạt động ngoài mục tiêu trong chỉnh sửa gen với công nghệ CRISPR/Cas9
+## Phương pháp Học sâu dự đoán hoạt động ngoài mục tiêu (off-target) trong chỉnh sửa gen với công nghệ CRISPR/Cas9
 
 Yều cầu:
 * Python 3.10.13
