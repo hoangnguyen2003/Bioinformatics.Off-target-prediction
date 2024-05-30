@@ -232,34 +232,8 @@ class OffTargetPrediction:
             History = self.model.fit(self.train_flow(self.train_negative, self.train_positive, self.batch_size),
                                      shuffle=True,
                                      validation_data=self.valid_flow(self.val_negative, self.val_positive, 100),
-                                     validation_steps=1,
-                                     steps_per_epoch=self.num_batch,
                                      epochs=self.epochs,
                                      callbacks=self.callbacks)
-            plt.figure()
-            plt.plot(History.history['acc'])
-            plt.plot(History.history['val_acc'])
-            plt.title("model accuracy")
-            plt.xlabel("epoch")
-            plt.ylabel("Accuracy")
-            plt.legend(['train','val'],loc='upper left')
-
-            save_path = os.path.join("images", "")
-            os.makedirs(save_path, exist_ok=True)
-            plt.savefig(os.path.join(save_path, self.roc_image_name + "_11.png"))
-
-            plt.show()
-            plt.figure()
-            plt.plot(History.history['loss'])
-            plt.plot(History.history['val_loss'])
-            plt.title("model loss")
-            plt.xlabel("epoch")
-            plt.ylabel("Loss")
-            plt.legend(['train','val'],loc='upper left')
-
-            plt.savefig(os.path.join(save_path, self.roc_image_name + "_22.png"))
-
-            plt.show()
             
         else:
             self.model.fit(X_train, y_train,
