@@ -46,7 +46,7 @@ class OffTargetPrediction:
             return
 
         eary_stopping = tf.keras.callbacks.EarlyStopping(min_delta=0.0001,
-                                                         patience=10,
+                                                         patience=100,
                                                          verbose=0,
                                                          mode='auto'
                                                          )
