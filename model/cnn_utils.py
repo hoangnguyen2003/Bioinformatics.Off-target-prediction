@@ -45,8 +45,9 @@ class OffTargetPrediction:
             self.model = load_model('SaveModel/' + self.model_name + '.h5')
             return
 
-        eary_stopping = tf.keras.callbacks.EarlyStopping(min_delta=0.0001,
-                                                         patience=100,
+        eary_stopping = tf.keras.callbacks.EarlyStopping(monitor="loss",
+                                                         min_delta=0.0001,
+                                                         patience=10,
                                                          verbose=0,
                                                          mode='auto'
                                                          )
