@@ -78,11 +78,11 @@ class OffTargetPrediction:
 
         adam_opt = tf.keras.optimizers.Adam(learning_rate=self.lr)
 
-        if self.is_sampling or self.is_loso:
-            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
-            # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
-        else:
-            self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
+        # if self.is_sampling or self.is_loso:
+        #     self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc'])
+        #     # self.model.compile(loss='binary_crossentropy', optimizer = adam_opt, metrics=['acc', roc_auc])
+        # else:
+        self.model.compile(loss='binary_crossentropy', optimizer = adam_opt)
         self.model.summary()
 
     def get_data(self):
@@ -232,6 +232,8 @@ class OffTargetPrediction:
             History = self.model.fit(self.train_flow(self.train_negative, self.train_positive, self.batch_size),
                                      shuffle=True,
                                      validation_data=self.valid_flow(self.val_negative, self.val_positive, 100),
+                                     validation_steps=1,
+                                     steps_per_epoch=self.num_batch,
                                      epochs=self.epochs,
                                      callbacks=self.callbacks)
             
