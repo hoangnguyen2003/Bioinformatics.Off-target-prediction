@@ -254,12 +254,12 @@ class OffTargetPrediction:
         elif self.is_sampling:
             History = self.model.fit(self.train_flow(self.train_negative, self.train_positive, self.batch_size),
                                      shuffle=True,
-                                     validation_data=self.valid_flow(self.val_negative, self.val_positive, 45),
+                                     validation_data=self.valid_flow(self.val_negative, self.val_positive, 100),
                                      validation_steps=1,
                                      steps_per_epoch=self.num_batch,
                                      epochs=self.epochs,
                                      callbacks=self.callbacks)
-            print(History.history.keys())
+            plt.figure()
             plt.plot(History.history['acc'])
             plt.plot(History.history['val_acc'])
             plt.title("model accuracy")
@@ -272,6 +272,7 @@ class OffTargetPrediction:
             plt.savefig(os.path.join(save_path, self.roc_image_name + "_11.png"))
 
             plt.show()
+            plt.figure()
             plt.plot(History.history['loss'])
             plt.plot(History.history['val_loss'])
             plt.title("model loss")
