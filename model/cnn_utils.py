@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score, roc_auc_score, average_precision_score, auc, roc_curve, RocCurveDisplay
 from sklearn.preprocessing import LabelBinarizer
 import os 
-os.environ["KERAS_BACKEND"] = "jax" 
 import keras
 from keras import backend as K
 from keras.utils import to_categorical
@@ -16,28 +15,6 @@ from keras.layers import Input, Dense, Conv2D, Flatten, BatchNormalization
 seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
-
-# def binary_PFA(y_true, y_pred, threshold=K.variable(value=0.5)):
-#     y_pred = K.cast(y_pred >= threshold, 'float32')
-#     N = K.sum(1 - y_true)
-#     FP = K.sum(y_pred - y_pred * y_true)
-#     return FP / N
-
-# def binary_PTA(y_true, y_pred, threshold=K.variable(value=0.5)):
-#     y_pred = K.cast(y_pred >= threshold, 'float32')
-#     P = K.sum(y_true)
-#     TP = K.sum(y_pred * y_true)
-#     return TP / P
-
-# def roc_auc(y_true, y_pred):
-#     ptas = tf.stack([binary_PTA(y_true, y_pred, k)
-#                      for k in np.linspace(0, 1, 1000)], axis=0)
-#     pfas = tf.stack([binary_PFA(y_true, y_pred, k)
-#                      for k in np.linspace(0, 1, 1000)], axis=0)
-#     pfas = tf.concat([tf.ones((1,)), pfas], axis=0)
-#     binSizes = -(pfas[1:] - pfas[:-1])
-#     s = ptas * binSizes
-#     return K.sum(s, axis=0)
 
 class OffTargetPrediction:
     def __init__(self,
@@ -68,8 +45,7 @@ class OffTargetPrediction:
             self.model = load_model('SaveModel/' + self.model_name + '.h5')
             return
 
-        eary_stopping = tf.keras.callbacks.EarlyStopping(monitor='loss',
-                                                         min_delta=0.0001,
+        eary_stopping = tf.keras.callbacks.EarlyStopping(min_delta=0.0001,
                                                          patience=5,
                                                          verbose=0,
                                                          mode='auto'
